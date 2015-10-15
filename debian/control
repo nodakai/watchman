@@ -1,0 +1,60 @@
+Source: watchman
+Section: utils
+Priority: optional
+Maintainer: NODA, Kai <nodakai@gmail.com>
+Build-Depends: debhelper (>= 10), dpkg-dev (>= 1.15), dh-autoreconf, libpcre3-dev,
+    python-all-dev (>= 2.3.5-11), python3-all-dev, dh-python, ruby-all-dev, rake, ruby-rspec,
+    docbook-xsl, docbook-xml, xsltproc
+Standards-Version: 4.3.0.3
+Homepage: https://facebook.github.io/watchman/
+Vcs-Git: https://github.com/nodakai/watchman.git -b debian
+Vcs-Browser: https://github.com/facebook/watchman
+X-Python-Version: >= 2.4
+X-Python3-Version: >= 3.0
+XS-Ruby-Versions: all
+Testsuite: autopkgtest-pkg-ruby
+
+Package: watchman
+Architecture: any
+Multi-Arch: foreign
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Watches files and records, or triggers actions, when they change.
+ Watchman exists to watch files and record when they actually change. It can
+ also trigger actions (such as rebuilding assets) when matching files change.
+ .
+ This is the main package for the watchman executable.
+
+Package: python-watchman
+Architecture: any
+Multi-Arch: same
+Section: python
+Depends: watchman (= ${binary:Version}), ${python:Depends}, ${misc:Depends}, ${shlibs:Depends}
+Description: Watches files and records, or triggers actions, when they change.
+ Watchman exists to watch files and record when they actually change. It can
+ also trigger actions (such as rebuilding assets) when matching files change.
+ .
+ This package provides the Python 2 interface for watchman.
+
+Package: python3-watchman
+Architecture: any
+Multi-Arch: same
+Section: python
+Depends: watchman (= ${binary:Version}), ${python3:Depends}, ${misc:Depends}, ${shlibs:Depends}
+Description: Watches files and records, or triggers actions, when they change.
+ Watchman exists to watch files and record when they actually change. It can
+ also trigger actions (such as rebuilding assets) when matching files change.
+ .
+ This package provides the Python 3 interface for watchman.
+
+Package: ruby-watchman
+Architecture: any
+Multi-Arch: same
+Section: ruby
+Depends: watchman (= ${binary:Version}), ruby | ruby-interpreter, ${misc:Depends}, ${shlibs:Depends}
+XB-Ruby-Versions: ${ruby:Versions}
+X-DhRuby-Root: ruby
+Description: Watches files and records, or triggers actions, when they change.
+ Watchman exists to watch files and record when they actually change. It can
+ also trigger actions (such as rebuilding assets) when matching files change.
+ .
+ This package provides the Ruby interface for watchman.

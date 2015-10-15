@@ -1,0 +1,61 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE=1
+
+%:
+	dh $@ --parallel --with autoreconf,python2,python3
+
+PYTHON2_VERSIONS = $(shell pyversions -r debian/control)
+PYTHON3_VERSIONS = $(shell py3versions -r debian/control)
+RUBY_VERSIONS = $(shell dh_ruby --print-supported)
+
+CONFIGURE_PARAMS = --with-pcre --without-gimli
+# dh_make generated override targets
+override_dh_auto_configure:
+	dh_auto_configure --builddirectory=$(CURDIR)/debian/build-main -- \
+            ${CONFIGURE_PARAMS} --without-python --without-ruby \
+            --with-buildinfo='./configure ${CONFIGURE_PARAMS}' \
+            $(shell dpkg-buildflags --export=configure)
+
+override_dh_auto_build:
+	for py in $(PYTHON2_VERSIONS); do \
+            ( cd python && $$py ./setup.py build -b build-$$py ) ; \
+        done
+	for py in $(PYTHON3_VERSIONS); do \
+            ( cd python && $$py ./setup.py build -b build-$$py ) ; \
+        done
+	cd ruby/ruby-watchman && rake build
+	xsltproc --nonet \
+             --param make.year.ranges 1 \
+             --param make.single.year.ranges 1 \
+             --param man.charmap.use.subset 0 \
+             -o debian/watchman \
+http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl \
+             debian/watchman.1.xml
+	dh_auto_build --builddirectory=$(CURDIR)/debian/build-main
+
+override_dh_auto_install:
+	for py in $(PYTHON2_VERSIONS); do \
+            ( cd python && $$py ./setup.py build -b build-$$py install --root $(CURDIR)/debian/python-watchman --prefix usr ) ; \
+        done
+	for py in $(PYTHON3_VERSIONS); do \
+            ( cd python && $$py ./setup.py build -b build-$$py install --root $(CURDIR)/debian/python3-watchman --prefix usr ) ; \
+        done
+	dh_auto_install --builddirectory=$(CURDIR)/debian/build-main --destdir=$(CURDIR)/debian/watchman
+	rm -rf $(CURDIR)/debian/watchman/usr/var/
+	cp $(CURDIR)/debian/watchman.1 $(CURDIR)/debian/watchman/usr/share/man/man1
+
+override_dh_auto_test:
+	dh_auto_test --builddirectory=$(CURDIR)/debian/build-main
+	cd ruby/ruby-watchman && rake spec
+
+override_dh_auto_clean:
+	for py in $(PYTHON2_VERSIONS); do \
+            rm -rf python/build-$$py ; \
+        done
+	for py in $(PYTHON3_VERSIONS); do \
+            rm -rf python/build-$$py ; \
+        done
+	cd ruby/ruby-watchman && rake clean
+	dh_auto_clean --builddirectory=$(CURDIR)/debian/build-main
+	dh_autoreconf_clean

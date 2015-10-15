@@ -1,0 +1,5 @@
+watchman (4.9.0-1) UNRELEASED; urgency=medium
+
+  * Initial release. (Closes: #740691)
+
+ -- NODA, Kai <nodakai@gmail.com>  Wed, 08 May 2019 01:20:01 +0800

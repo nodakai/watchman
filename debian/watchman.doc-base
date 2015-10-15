@@ -1,0 +1,9 @@
+Document: watchman
+Title: Debian watchman Manual
+Author: Facebook, Inc.
+Abstract: The official watchman manual from https://facebook.github.io/watchman/docs.
+Section: System/Monitoring
+
+Format: HTML
+Index: /usr/share/doc/watchman/html/cli-options.html
+Files: /usr/share/doc/watchman/html/*.html

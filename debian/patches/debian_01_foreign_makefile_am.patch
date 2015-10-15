@@ -1,0 +1,10 @@
+Index: watchman-3.7.0/Makefile.am
+===================================================================
+--- watchman-3.7.0.orig/Makefile.am
++++ watchman-3.7.0/Makefile.am
+@@ -1,3 +1,5 @@
++AUTOMAKE_OPTIONS = foreign
++
+ bin_PROGRAMS = watchman
+ # ensure that we have a reasonable default for the python install
+ DESTDIR ?= /
